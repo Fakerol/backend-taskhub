@@ -30,7 +30,9 @@
   "jest": {
     "preset": "default",
     "testEnvironment": "node",
-    "extensionsToTreatAsEsm": [".js"],
+    "extensionsToTreatAsEsm": [
+      ".js"
+    ],
     "globals": {
       "ts-jest": {
         "useESM": true

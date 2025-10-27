@@ -20,8 +20,8 @@ app.use(morgan("dev"));
 
 // Rate limiter
 const limiter = rateLimit({
-  windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS) || 15 * 60 * 1000,
-  limit: parseInt(process.env.RATE_LIMIT_MAX) || 100,
+  windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS),
+  limit: parseInt(process.env.RATE_LIMIT_MAX),
 });
 app.use(limiter);
 

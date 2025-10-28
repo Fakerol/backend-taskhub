@@ -1,6 +1,7 @@
 import { Task } from "../models/task.model.js";
 import { Project } from "../models/project.model.js";
 import { User } from "../models/user.model.js";
+import { logTaskActivity } from "./activity.service.js";
 
 // Create a new task
 export const createTask = async (taskData, userId) => {
@@ -44,10 +45,15 @@ export const createTask = async (taskData, userId) => {
     createdBy: userId,
   });
 
-  return await Task.findById(task._id)
+  const populatedTask = await Task.findById(task._id)
     .populate("project", "name description")
     .populate("assignedTo", "name email")
     .populate("createdBy", "name email");
+
+  // Log activity
+  await logTaskActivity(projectId, userId, "created", taskFields.title);
+
+  return populatedTask;
 };
 
 // Get all tasks for a user (based on project access)
@@ -226,6 +232,9 @@ export const updateTask = async (taskId, updateData, userId) => {
     .populate("assignedTo", "name email")
     .populate("createdBy", "name email");
 
+  // Log activity
+  await logTaskActivity(task.project, userId, "updated", task.title);
+
   return updatedTask;
 };
 
@@ -258,6 +267,9 @@ export const deleteTask = async (taskId, userId) => {
   if (!canDelete) {
     throw new Error("You don't have permission to delete this task");
   }
+
+  // Log activity before deletion
+  await logTaskActivity(task.project, userId, "deleted", task.title);
 
   await Task.findByIdAndDelete(taskId);
   return { message: "Task deleted successfully" };
@@ -314,6 +326,9 @@ export const assignTask = async (taskId, assignedToUserId, userId) => {
     .populate("project", "name description")
     .populate("assignedTo", "name email")
     .populate("createdBy", "name email");
+
+  // Log activity
+  await logTaskActivity(task.project, userId, "assigned", task.title);
 
   return updatedTask;
 };

@@ -1,5 +1,6 @@
 import { Project } from "../models/project.model.js";
 import { User } from "../models/user.model.js";
+import { logProjectActivity, logMemberActivity } from "./activity.service.js";
 
 // Create a new project
 export const createProject = async (projectData, userId) => {
@@ -9,9 +10,14 @@ export const createProject = async (projectData, userId) => {
     members: [userId], // Owner is automatically a member
   });
 
-  return await Project.findById(project._id)
+  const populatedProject = await Project.findById(project._id)
     .populate("owner", "name email")
     .populate("members", "name email");
+
+  // Log activity
+  await logProjectActivity(project._id, userId, "created", projectData.name);
+
+  return populatedProject;
 };
 
 // Get all projects for a user (owned or member)
@@ -109,6 +115,9 @@ export const updateProject = async (projectId, updateData, userId) => {
     .populate("owner", "name email")
     .populate("members", "name email");
 
+  // Log activity
+  await logProjectActivity(projectId, userId, "updated", project.name);
+
   return updatedProject;
 };
 
@@ -123,6 +132,9 @@ export const deleteProject = async (projectId, userId) => {
   if (!project) {
     throw new Error("Project not found or you don't have permission to delete it");
   }
+
+  // Log activity before deletion
+  await logProjectActivity(projectId, userId, "deleted", project.name);
 
   await Project.findByIdAndDelete(projectId);
   return { message: "Project deleted successfully" };
@@ -160,6 +172,9 @@ export const addMemberToProject = async (projectId, email, userId) => {
     .populate("owner", "name email")
     .populate("members", "name email");
 
+  // Log activity
+  await logMemberActivity(projectId, userId, "added", userToAdd.name);
+
   return updatedProject;
 };
 
@@ -180,6 +195,9 @@ export const removeMemberFromProject = async (projectId, memberId, userId) => {
     throw new Error("Cannot remove the project owner");
   }
 
+  // Get member details for logging
+  const memberToRemove = await User.findById(memberId);
+
   // Remove user from members array
   const updatedProject = await Project.findByIdAndUpdate(
     projectId,
@@ -188,6 +206,9 @@ export const removeMemberFromProject = async (projectId, memberId, userId) => {
   )
     .populate("owner", "name email")
     .populate("members", "name email");
+
+  // Log activity
+  await logMemberActivity(projectId, userId, "removed", memberToRemove.name);
 
   return updatedProject;
 };

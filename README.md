@@ -13,10 +13,10 @@ A Node.js backend API for a task management application with authentication, pro
 - ✅ MongoDB Integration
 - ✅ Project Management (Full CRUD)
 - ✅ Project Member Management
-- ✅ User Permissions & Access Control
+- ✅ User Permissions & Access Control (Only owner can create, update and delete Task and Project, member can only view details and view all)
 - ✅ Task Management (Full CRUD)
 - ✅ Task Assignment & Status Tracking
-- 🔄 Activity Tracking (Coming Soon)
+- ✅ Activity Tracking for each Project
 
 ## Tech Stack
 
@@ -54,25 +54,25 @@ A Node.js backend API for a task management application with authentication, pro
    NODE_ENV=development
 
    # Database Configuration
-   MONGODB_URI=mongodb://localhost:27017/taskhub
+   MONGODB_URI=mongodb://localhost:27017/
 
    # JWT Configuration
    # IMPORTANT: Change these secrets in production!
-   JWT_SECRET=your-super-secret-jwt-key-change-this-in-production-minimum-32-characters
-   JWT_REFRESH_SECRET=your-super-secret-refresh-key-change-this-in-production-minimum-32-characters
-   JWT_EXPIRES_IN=15m
+   JWT_SECRET=TaskHub_2025@JWT
+   JWT_REFRESH_SECRET=TaskHub_2025@refresh
+   JWT_EXPIRES_IN=30m
    JWT_REFRESH_EXPIRES_IN=7d
 
    # CORS Configuration
-   CORS_ORIGIN=http://localhost:3000
+   CORS_ORIGIN=http://localhost:5173
 
    # Rate Limiting Configuration
-   RATE_LIMIT_WINDOW_MS=900000
-   RATE_LIMIT_MAX=100
-   AUTH_RATE_LIMIT_WINDOW_MS=900000
-   AUTH_RATE_LIMIT_MAX=5
-   PASSWORD_RESET_RATE_LIMIT_WINDOW_MS=3600000
-   PASSWORD_RESET_RATE_LIMIT_MAX=3
+   RATE_LIMIT_WINDOW_MS=300000
+   RATE_LIMIT_MAX=1000
+
+   AUTH_RATE_LIMIT_WINDOW_MS=300000
+   AUTH_RATE_LIMIT_MAX=1000
+
    ```
 
    **Security Note**: Never commit your `.env` file to version control. The `.env` file should be added to `.gitignore`.

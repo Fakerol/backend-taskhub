@@ -59,15 +59,15 @@ export const createTask = async (taskData, userId) => {
 // Get all tasks for a user (based on project access)
 export const getUserTasks = async (userId, queryParams = {}) => {
   const {
-    page = 1,
-    limit = 10,
+    page = '',
+    limit = '',
     search = "",
     status,
     priority,
     assignedTo,
     projectId,
     sortBy = "createdAt",
-    sortOrder = "desc",
+    sortOrder = "asc",
   } = queryParams;
 
   // First, get all projects the user has access to

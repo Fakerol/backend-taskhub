@@ -58,8 +58,8 @@ A Node.js backend API for a task management application with authentication, pro
 
    # JWT Configuration
    # IMPORTANT: Change these secrets in production!
-   JWT_SECRET=TaskHub_2025@JWT
-   JWT_REFRESH_SECRET=TaskHub_2025@refresh
+   JWT_SECRET=<JWT-secret>
+   JWT_REFRESH_SECRET=<JWT-refresh>
    JWT_EXPIRES_IN=30m
    JWT_REFRESH_EXPIRES_IN=7d
 
